@@ -4,8 +4,8 @@ FROM node:${NODE_VERSION}
 # Home directory for Node-RED application source code.
 RUN mkdir -p /usr/src/node-red
 
-# User data directory, contains flows, config and nodes.
-RUN mkdir /data
+# User data directory, contains flows, config and nodes. Add /.npm to enable loading stuff later on.
+RUN mkdir /data /.npm
 
 WORKDIR /usr/src/node-red
 
@@ -13,6 +13,12 @@ WORKDIR /usr/src/node-red
 RUN useradd --home-dir /usr/src/node-red --no-create-home node-red \
     && chown -R node-red:node-red /data \
     && chown -R node-red:node-red /usr/src/node-red
+
+# Fix rights so that we don't expect fixed user.
+RUN chgrp -R 0 /data && \
+    chmod -R g=u /data && \
+    chgrp -R 0 /.npm && \
+    chmod -R g=u /.npm
 
 USER node-red
 
