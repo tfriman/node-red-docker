@@ -1,5 +1,4 @@
-ARG NODE_VERSION=8
-FROM node:${NODE_VERSION}
+FROM node:8
 
 # Home directory for Node-RED application source code.
 RUN mkdir -p /usr/src/node-red
