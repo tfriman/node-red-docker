@@ -13,17 +13,17 @@ RUN useradd --home-dir /usr/src/node-red --no-create-home node-red \
     && chown -R node-red:node-red /data \
     && chown -R node-red:node-red /usr/src/node-red
 
-# Fix rights so that we don't expect fixed user.
-RUN chgrp -R 0 /data && \
-    chmod -R g=u /data && \
-    chgrp -R 0 /.npm && \
-    chmod -R g=u /.npm
-
-USER node-red
-
 # package.json contains Node-RED NPM module and node dependencies
 COPY package.json /usr/src/node-red/
 RUN npm install
+
+# Fix rights so that we don't expect fixed user.
+RUN chgrp -R 0 /data /.npm /usr/src/node-red && \
+    chmod -R g=u /data /.npm /usr/src/node-red  
+
+# Fix rights so that we don't expect fixed user.
+RUN chgrp -R 0 /data /.npm /usr/src/node-red && \
+    chmod -R g=u /data /.npm /usr/src/node-red  
 
 # User configuration directory volume
 EXPOSE 1880
